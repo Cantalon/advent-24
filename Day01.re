@@ -1,20 +1,21 @@
 open Data;
+open! Helpers;
 
 let (ld, rd) =
   List.fold_left(
     (cur, str) => {
       let (lcur, rcur) = cur;
       (
-        [int_of_string(String.sub(str, 0, 5)), ...lcur],
-        [int_of_string(String.sub(str, 8, 5)), ...rcur],
+        [List.nth(parseInts(str), 0), ...lcur],
+        [List.nth(parseInts(str), 1), ...rcur],
       );
     },
     ([], []),
-    String.split_on_char('\n', data),
+    parseInput(data),
   );
 
 /* Part 1 */
-Js.log(
+println(
   List.fold_left2(
     (tot, a, b) => tot + abs(a - b),
     0,
@@ -24,12 +25,6 @@ Js.log(
 );
 
 /* Part 2 */
-module IntMap =
-  Map.Make({
-    type t = int;
-    let compare: (t, t) => int = (-);
-  });
-
 let (lmap, rmap) = (
   List.fold_left(
     (prev, elem) =>
@@ -73,4 +68,4 @@ IntMap.iter(
   },
   lmap,
 );
-Js.log(ans);
+println(ans^);
