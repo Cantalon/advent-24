@@ -10,6 +10,20 @@ let parseInts: string => list(int) =
 
 let println: 'a => unit = Js.log;
 
+/* remedial string helpers */
+
+let charListOfString: string => list(char) =
+  str => {
+    let rec getChars: (bytes, int, list(char)) => list(char) =
+      (b, depth, l) =>
+        if (depth == (-1)) {
+          l;
+        } else {
+          getChars(b, depth - 1, [Bytes.get(b, depth), ...l]);
+        };
+    getChars(Bytes.of_string(str), String.length(str), []);
+  };
+
 /* data structures */
 
 module IntMap =
