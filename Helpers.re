@@ -21,7 +21,40 @@ let charListOfString: string => list(char) =
         } else {
           getChars(b, depth - 1, [Bytes.get(b, depth), ...l]);
         };
-    getChars(Bytes.of_string(str), String.length(str), []);
+    getChars(Bytes.of_string(str), String.length(str) - 1, []);
+  };
+
+/* list helpers */
+let rec take: (int, list('a)) => list('a) =
+  (k, l) =>
+    switch (k, l) {
+    | (0, _) => []
+    | (_, [hd, ...tl]) => [hd, ...take(k - 1, tl)]
+    | _ => failwith("take: improper input")
+    };
+
+let rec drop: (int, list('a)) => list('a) =
+  (k, l) =>
+    switch (k, l) {
+    | (0, _) => l
+    | (_, [_hd, ...tl]) => drop(k - 1, tl)
+    | _ => failwith("drop: improper input")
+    };
+
+let getIndex: ('a, list('a)) => int =
+  (i, lst) => {
+    let rec getIndexHelper: ('a, list('a), int) => int =
+      (elem, l, index) =>
+        switch (l) {
+        | [] => failwith("getIndex: not found")
+        | [hd, ...tl] =>
+          if (hd == elem) {
+            index;
+          } else {
+            getIndexHelper(elem, tl, index + 1);
+          }
+        };
+    getIndexHelper(i, lst, 0);
   };
 
 /* data structures */
@@ -30,4 +63,11 @@ module IntMap =
   Map.Make({
     type t = int;
     let compare: (t, t) => int = (-);
+  });
+
+module IntPairsSet =
+  Set.Make({
+    type t = (int, int);
+    let compare = ((x0, y0), (x1, y1)) =>
+      compare(10000 * x0 + y0, 10000 * x1 + y1);
   });
