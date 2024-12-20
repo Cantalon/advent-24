@@ -71,3 +71,14 @@ module IntPairsSet =
     let compare = ((x0, y0), (x1, y1)) =>
       compare(10000 * x0 + y0, 10000 * x1 + y1);
   });
+
+/* number theory */
+
+let rec gcd: (int, int) => int =
+  (a, b) =>
+    switch (b) {
+    | 0 => a
+    | _ => gcd(b, a mod b)
+    };
+
+let lcm: (int, int) => int = (a, b) => a * b / gcd(a, b);
